@@ -1,0 +1,29 @@
+name: .NET
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: [self-hosted, windows, x64, Aurora]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build and Publish API
+        run: .\build.ps1
+
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1
+        with:
+          version: "*"
+
+      - name: Octo Pack Web
+        run:
+          octo pack --id Aurora.AI.API --basePath web --format zip --version 1.0.0.${{ github.run_number }}
+      
+      - name: Octo Push
+        run: >
+          octo push --server https://od.kfh.kw/ --apiKey ${{ secrets.OD_API_KEY }} --space Spaces-122 --package Aurora.AI.API.1.0.0.${{ github.run_number }}.zip
+

@@ -1,0 +1,10 @@
+
+
+wheelhouse/
+wheelhouse.tar.gz
+*.zip
+*__pycache__*
+.idea/*
+logs/
+logs/api_service.log
+*.log
